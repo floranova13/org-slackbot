@@ -9,6 +9,8 @@ const unsplash = createApi({
   fetch: nodeFetch,
 });
 
+console.log("hello");
+
 // Initializes your app with your bot token and signing secret
 const port = 3000;
 const app = new App({
@@ -23,16 +25,20 @@ const app = new App({
 
 // Listens to incoming messages that contain "hello"
 app.message('hello', async ({ message, say }) => {
+  console.log("hello in message");
   // say() sends a message to the channel where the event was triggered
   await say(`Hey there, <@${message.user}>!`);
 });
 
 // Listens to incoming messages that contain "giraffe"
 app.message('giraffe', async ({ message, say }) => {
+  console.log("hello in giraffe");
   // say() sends a message to the channel where the event was triggered
-  // const giraffeImage = await unsplash.getRandom('giraffe');
-  // await console.log(giraffeImage);
+  const giraffeImage = await unsplash.photos.getRandom('giraffe');
+  console.log(giraffeImage.urls.full);
+  console.log(giraffeImage);
   await say({
+    'text': 'a giraffe image',
     'blocks': [
       {
         'type': 'section',
@@ -43,7 +49,7 @@ app.message('giraffe', async ({ message, say }) => {
         },
         'accessory': {
           'type': 'image',
-          'image_url': 'https://source.unsplash.com/random/?giraffe',
+          'image_url': giraffeImage.urls.full, //'https://source.unsplash.com/random?giraffe',
           'alt_text': 'giraffe',
         },
       },
