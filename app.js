@@ -28,6 +28,27 @@ app.message('hello', async ({ message, say }) => {
   await say(`Hey there, <@${message.user}>!`);
 });
 
+// Lists the people who have marked themselves as "free agent"
+app.message(
+  /^(who is free|list free agents|get free agents|is anyone free).*/,
+  async ({ message, say, client }) => {
+    // try {
+    //   const messages = await searchConversationHistory(message.channel, client, ["i'm a free agent", 'im a free agent'], 100);
+    //   const users = messages.map(m => m.user);
+    //   const names = await getManyNamesFromUserIDs(users, client);
+    //   const uniqueNames = Array.from(new Set(names)).join(', ');
+    //   say(`Free agents:\n${uniqueNames}`);
+    // } catch (e) {
+    //   console.log('Something went wrong while getting free agents!');
+    // };
+    const messages = await searchConversationHistory(message.channel, client, ["i'm a free agent", 'im a free agent'], 100);
+    const users = messages.map(m => m.user);
+    const names = await getManyNamesFromUserIDs(users, client);
+    const uniqueNames = Array.from(new Set(names)).join(', ');
+    say(`Free agents:\n${uniqueNames}`);
+  }
+);
+
 // Listens to incoming messages that contain "giraffe"
 app.message('giraffe', async ({ message, say }) => {
   unsplash.photos
@@ -56,9 +77,35 @@ app.message('giraffe', async ({ message, say }) => {
       });
     })
     .catch(() => {
-      console.log('something went wrong while getting a giraffe!');
+      console.log('Something went wrong while getting a giraffe!');
     });
 });
+
+// TODO: CHANGE TO TAKE IN LIMIT INPUT THAT PAGINATES
+const searchConversationHistory = async (channel, client, searchArr, limit = 100) => {
+  const result = await client.conversations.history({ token: process.env.SLACK_BOT_TOKEN, channel, limit})
+  const messages = result.messages.filter(message => {
+    const text = message.text.toLowerCase();
+    return searchArr.some(s => text.includes(s)); // TODO: CHANGE TO REGEX MATCHING
+  })
+  return messages;
+};
+
+const getManyNamesFromUserIDs = async (idArr, client) => {
+  const users = []
+  const promises = idArr.map(async (id) => {
+    const user = await getNameFromUserID(id, client);
+    users.push(user);
+  })
+
+  await Promise.all(promises);
+  return users;
+}
+
+const getNameFromUserID = async (id, client) => {
+  const user = await client.users.profile.get({ token: process.env.SLACK_BOT_TOKEN, user: id })
+  return user.profile.real_name;
+};
 
 (async () => {
   // Start your app

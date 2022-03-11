@@ -6,3 +6,6 @@ In the future, it would be interesting to use this to practice team productivity
 
 ## Setup
 Create a `.env` file and paste in the contents of the TEMPLATE.env file.
+
+## Notes
+- Add a way for users to mark themselves as 
