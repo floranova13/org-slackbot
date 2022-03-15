@@ -8,15 +8,26 @@ const freeAgentReactions = (app) => {
       const users = await searchFreeAgentMessages(message.channel, client, 100);
       const names = await getManyNamesFromUserIDs(users, client);
       const uniqueNames = Array.from(new Set(names)).sort();
-      const nameBlocks = uniqueNames.map((s) => {
-        return {
-          'type': 'section',
-          'text': {
-            'type': 'mrkdwn',
-            'text': `*${s}*`,
-          },
-        };
-      });
+      const nameBlocks =
+        uniqueNames && uniqueNames.length
+          ? uniqueNames.map((s) => {
+              return {
+                'type': 'section',
+                'text': {
+                  'type': 'mrkdwn',
+                  'text': `*${s}*`,
+                },
+              };
+            })
+          : [
+              {
+                'type': 'section',
+                'text': {
+                  'type': 'mrkdwn',
+                  'text': `*NONE*`,
+                },
+              },
+            ];
 
       say({
         'text': 'free agent members',
