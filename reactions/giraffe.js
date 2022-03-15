@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 const giraffeReactions = (app, unsplash) => {
   // Listens to incoming messages that contain "giraffe"
-  app.message('giraffe', async ({ message, say }) => {
+  app.message('get giraffe', async ({ message, say }) => {
     unsplash.photos
       .getRandom({ query: 'giraffe', count: 1 })
       .then((result) => {
@@ -19,7 +19,7 @@ const giraffeReactions = (app, unsplash) => {
                 'type': 'mrkdwn',
                 'text': `Have a giraffe, <@${
                   message.user
-                }>!.\n\n*Bonus Giraffe Fact:*\n${_.sample(facts)}`,
+                }>!\n\n*Bonus Giraffe Fact:*\n${_.sample(facts)}`,
               },
               'accessory': {
                 'type': 'image',
