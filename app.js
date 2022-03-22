@@ -5,6 +5,7 @@ import 'dotenv/config';
 import generalReactions from './reactions/index.js';
 import giraffeReactions from './reactions/giraffe.js';
 import freeAgentReactions from './reactions/freeAgent.js';
+import timeOffReactions from './reactions/timeOff.js';
 
 const { App } = slackBolt;
 const unsplash = createApi({
@@ -27,6 +28,7 @@ const app = new App({
 generalReactions(app);
 giraffeReactions(app, unsplash);
 freeAgentReactions(app);
+timeOffReactions(app);
 
 (async () => {
   await app.start();

@@ -59,3 +59,5 @@ const timeOffReactions = (app) => {
     await respond(`You selected <@${action.selected_user}>`);
   });
 };
+
+export default timeOffReactions;
